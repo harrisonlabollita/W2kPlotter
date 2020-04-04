@@ -76,7 +76,7 @@ class W2kPlotter():
         else:
             plt.show()
 
-file2 = '/Users/harrisonlabollita/Documents/Arizona State University/Botana group/Projects/ho_nick/bandstruct/W2k_spaghetti/dz2/5410_k_1000_tot_Ni_dz2.agr'
-file = '/Users/harrisonlabollita/Documents/Arizona State University/Botana group/Projects/ho_nick/bandstruct/W2k_spaghetti/dz2/5410_k_1000_tot_Ni_dz2.spaghetti_ene'
-W = W2kPlotter(file, file2, r'5410 Tot Ni dz$^{2}$', save=False, Emin = -2, Emax = 2)
-W.BS_Plotter()
+#file2 = '/Users/harrisonlabollita/Documents/Arizona State University/Botana group/Projects/ho_nick/bandstruct/W2k_spaghetti/dz2/5410_k_1000_tot_Ni_dz2.agr'
+#file = '/Users/harrisonlabollita/Documents/Arizona State University/Botana group/Projects/ho_nick/bandstruct/W2k_spaghetti/dz2/5410_k_1000_tot_Ni_dz2.spaghetti_ene'
+#W = W2kPlotter(file, file2, r'5410 Tot Ni dz$^{2}$', save=False, Emin = -2, Emax = 2)
+#W.BS_Plotter()
