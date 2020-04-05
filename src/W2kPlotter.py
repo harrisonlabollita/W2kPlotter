@@ -12,7 +12,7 @@ matplotlib.rc('font', **{'family':'sans-serif', 'sans-serif':['Computer Modern R
 # All the user must do is provide the correct input files into the program.
 class W2kPlotter():
 
-    def __init__(self, spaghetti, grace, title, save, Emin, Emax):
+    def __init__(self):
         # the grace file will give us the high symmetry points because as of now I'm
         # not sure how to find the high symmetry points
         self.spaghetti = spaghetti
@@ -22,8 +22,8 @@ class W2kPlotter():
         self.Emax = Emax
         self.title = title
 
-    def getHighSymmetryPoints(self):
-        f = open(self.grace, 'r')
+    def getHighSymmetryPoints(self, grace):
+        f = open(grace, 'r')
         highSymmPts = []
         highSymmLabels = []
         for i, line in enumerate(f):
@@ -43,23 +43,23 @@ class W2kPlotter():
         return(highSymmPts, highSymmLabels)
 
 
-    def BS_Plotter(self):
-        f = open(self.spaghetti, 'r')
+    def BS_Plotter(self, spaghetti, grace, title, save, Emin, Emax):
+        f = open(spaghetti, 'r')
         k = []
         E = []
-        highsymmpts, labels = self.getHighSymmetryPoints()
-        plt.figure()
+        highsymmpts, labels = self.getHighSymmetryPoints(grace)
 
+        plt.figure()
         for i, line in enumerate(f):
             if 'bandindex' not in line:
                 line = line.rstrip().lstrip()
-                if float(line.split()[4]) > self.Emin and float(line.split()[4]) < self.Emax:
+                if float(line.split()[4]) > Emin and float(line.split()[4]) < Emax:
                     k.append(float(line.split()[3]))
                     E.append(float(line.split()[4]))
 
             else:
                 plt.plot(k, E, linewidth = 1)
-                #kmax = np.max(k)
+                kmax = np.max(k)
                 k = []
                 E = []
         plt.grid(True, linewidth =1, linestyle =':')
@@ -67,16 +67,40 @@ class W2kPlotter():
         #plt.xticks(highsymmpts, (r'$\Gamma$', 'X', 'M', r'$\Gamma$', 'Z', 'R', 'A', 'Z'))
         plt.xticks(highsymmpts, labels)
         plt.ylabel('Energy (eV)')
-        plt.ylim([self.Emin,self.Emax])
-        plt.xlim([0,2.91])
-        plt.plot(np.linspace(0,2.91,1000), [0 for i in range(1000)], 'k--', linewidth = 1)
-        plt.title(self.title)
+        plt.ylim([Emin, Emax])
+        plt.xlim([0,kmax])
+
+        plt.plot(np.linspace(0,kmax,1000), [0 for i in range(1000)], 'k--', linewidth = 1)
+        plt.title(title)
         if self.save:
-            plt.savefig('%s.eps'  %(self.title), format = 'eps')
+            plt.savefig('%s.eps'  %(title), format = 'eps')
         else:
             plt.show()
 
-#file2 = '/Users/harrisonlabollita/Documents/Arizona State University/Botana group/Projects/ho_nick/bandstruct/W2k_spaghetti/dz2/5410_k_1000_tot_Ni_dz2.agr'
-#file = '/Users/harrisonlabollita/Documents/Arizona State University/Botana group/Projects/ho_nick/bandstruct/W2k_spaghetti/dz2/5410_k_1000_tot_Ni_dz2.spaghetti_ene'
-#W = W2kPlotter(file, file2, r'5410 Tot Ni dz$^{2}$', save=False, Emin = -2, Emax = 2)
-#W.BS_Plotter()
+    def DOS_Plotter(self, dosfiles, title, save, Emin, Emax):
+
+        def getData(file):
+            energies = []
+            dz2 = []
+            dxy = []
+            dx2y2 = []
+            dxzdyz = []
+            with open(file) as f:
+               for i, line in enumerate(f):
+                    if i>2:
+                        if 'dn' in file:
+                            line = line.lstrip().rstrip()
+                            energies.append(float(line.split()[0]))
+                            dz2.append((-1)*float(line.split()[1]))
+                            dxy.append((-1)*float(line.split()[2]))
+                            dx2y2.append((-1)*float(line.split()[3]))
+                            dxzdyz.append((-1)*float(line.split()[4]))
+                        else:
+                            line = line.lstrip().rstrip()
+                            energies.append(float(line.split()[0]))
+                            dz2.append(float(line.split()[1]))
+                            dxy.append(float(line.split()[2]))
+                            dx2y2.append(float(line.split()[3]))
+                            dxzdyz.append(float(line.split()[4]))
+            return energies, dz2, dxy, dx2y2, dxzdy
+            
