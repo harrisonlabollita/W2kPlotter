@@ -79,28 +79,15 @@ class W2kPlotter():
 
     def DOS_Plotter(self, dosfiles, title, save, Emin, Emax):
 
-        def getData(file):
-            energies = []
-            dz2 = []
-            dxy = []
-            dx2y2 = []
-            dxzdyz = []
+        for file in dosfiles:
+            # Sometimes you will need to provide a list of dos files
             with open(file) as f:
-               for i, line in enumerate(f):
+                for i, line in enumerate(f):
                     if i>2:
                         if 'dn' in file:
                             line = line.lstrip().rstrip()
-                            energies.append(float(line.split()[0]))
-                            dz2.append((-1)*float(line.split()[1]))
-                            dxy.append((-1)*float(line.split()[2]))
-                            dx2y2.append((-1)*float(line.split()[3]))
-                            dxzdyz.append((-1)*float(line.split()[4]))
+                            for li in line:
+                                # Need a clever way to take in the input
+
                         else:
                             line = line.lstrip().rstrip()
-                            energies.append(float(line.split()[0]))
-                            dz2.append(float(line.split()[1]))
-                            dxy.append(float(line.split()[2]))
-                            dx2y2.append(float(line.split()[3]))
-                            dxzdyz.append(float(line.split()[4]))
-            return energies, dz2, dxy, dx2y2, dxzdy
-            
