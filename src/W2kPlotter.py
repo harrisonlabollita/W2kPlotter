@@ -12,16 +12,6 @@ matplotlib.rc('font', **{'family':'sans-serif', 'sans-serif':['Computer Modern R
 # All the user must do is provide the correct input files into the program.
 class W2kPlotter():
 
-    def __init__(self):
-        # the grace file will give us the high symmetry points because as of now I'm
-        # not sure how to find the high symmetry points
-        self.spaghetti = spaghetti
-        self.grace = grace
-        self.save = save
-        self.Emin = Emin
-        self.Emax = Emax
-        self.title = title
-
     def getHighSymmetryPoints(self, grace):
         f = open(grace, 'r')
         highSymmPts = []
@@ -50,6 +40,7 @@ class W2kPlotter():
         highsymmpts, labels = self.getHighSymmetryPoints(grace)
 
         plt.figure()
+
         for i, line in enumerate(f):
             if 'bandindex' not in line:
                 line = line.rstrip().lstrip()
@@ -58,8 +49,8 @@ class W2kPlotter():
                     E.append(float(line.split()[4]))
 
             else:
-                plt.plot(k, E, linewidth = 1)
-                kmax = np.max(k)
+                # need for program to grab the list k value because this will be the plot range
+                plt.plot(k, E, linewidth=2)
                 k = []
                 E = []
         plt.grid(True, linewidth =1, linestyle =':')
@@ -68,26 +59,38 @@ class W2kPlotter():
         plt.xticks(highsymmpts, labels)
         plt.ylabel('Energy (eV)')
         plt.ylim([Emin, Emax])
-        plt.xlim([0,kmax])
+        plt.xlim([0,2.90982])
 
-        plt.plot(np.linspace(0,kmax,1000), [0 for i in range(1000)], 'k--', linewidth = 1)
+        plt.plot(np.linspace(0,2.90982,1000), [0 for i in range(1000)], 'k--', linewidth = 1)
         plt.title(title)
-        if self.save:
-            plt.savefig('%s.eps'  %(title), format = 'eps')
+        if save:
+            filename = input('Please enter a file name:\n')
+            form = input('Please enter a file name format:\n')
+            plt.savefig('%s.%s'  %(filename, form), format = form)
         else:
             plt.show()
 
-    def DOS_Plotter(self, dosfiles, title, save, Emin, Emax):
-
+    def DOS_Plooter(self, dosfiles, title, save, Emin, Emax ):
         for file in dosfiles:
-            # Sometimes you will need to provide a list of dos files
             with open(file) as f:
-                for i, line in enumerate(f):
-                    if i>2:
+                energy = []
+                masterlist = []
+                for i, line in enumerate:
+                    if i > 2:
                         if 'dn' in file:
-                            line = line.lstrip().rstrip()
-                            for li in line:
-                                # Need a clever way to take in the input
-
-                        else:
-                            line = line.lstrip().rstrip()
+                            line = line.strip().rstrip()
+                            energy.append(float(line[0]))
+    # def DOS_Plotter(self, dosfiles, title, save, Emin, Emax):
+    #
+    #     for file in dosfiles:
+    #         # Sometimes you will need to provide a list of dos files
+    #         with open(file) as f:
+    #             for i, line in enumerate(f):
+    #                 if i>2:
+    #                     if 'dn' in file:
+    #                         line = line.lstrip().rstrip()
+    #                         for li in line:
+    #                             # Need a clever way to take in the input
+    #
+    #                     else:
+    #                         line = line.lstrip().rstrip()
